@@ -72,7 +72,7 @@ export default async function OgImage({ params }: { params: { slug: string } }) 
               marginBottom: 20,
             }}
           >
-            Joos 블로그
+            I do dare
           </div>
           <div
             style={{
