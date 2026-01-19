@@ -11,6 +11,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 import rehypeMdxToElement from '@/lib/rehype-mdx-to-element';
 import rehypeGoogleDriveEmbed from '@/lib/rehype-google-drive-embed';
+import rehypeSoftBreak from '@/lib/rehype-soft-break';
 import { compile } from '@mdx-js/mdx';
 import withSlugs from 'rehype-slug';
 import withToc from '@stefanprobst/rehype-extract-toc';
@@ -227,6 +228,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
                       remarkPlugins: [remarkGfm],
                       rehypePlugins: [
                         rehypeMdxToElement, // MDX 특수 노드를 일반 element로 변환 (가장 먼저 실행)
+                        rehypeSoftBreak, // soft break (Shift+Enter) 처리
                         rehypeGoogleDriveEmbed, // Google Drive embed 변환
                         rehypeSlug, // 헤딩에 ID 추가
                         rehypePrettycode, // 코드 하이라이팅
@@ -239,6 +241,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
                               'del', // 취소선 태그
                               'u', // 밑줄 태그
                               'iframe', // Google Drive embed용
+                              'br', // soft break용
                             ],
                             attributes: {
                               ...defaultSchema.attributes,
