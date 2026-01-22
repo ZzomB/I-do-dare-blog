@@ -12,12 +12,14 @@ import remarkGfm from 'remark-gfm';
 import rehypeMdxToElement from '@/lib/rehype-mdx-to-element';
 import rehypeGoogleDriveEmbed from '@/lib/rehype-google-drive-embed';
 import rehypeSoftBreak from '@/lib/rehype-soft-break';
+import rehypeRemoveUserContentPrefix from '@/lib/rehype-remove-user-content-prefix';
 import { compile } from '@mdx-js/mdx';
 import withSlugs from 'rehype-slug';
 import withToc from '@stefanprobst/rehype-extract-toc';
 import withTocExport from '@stefanprobst/rehype-extract-toc/mdx';
 import GiscusComments from '@/components/GiscusComments';
 import TableOfContents from '@/components/TableOfContents';
+import RemoveUserContentPrefix from '@/components/RemoveUserContentPrefix';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
@@ -116,9 +118,13 @@ export default async function BlogPost({ params }: BlogPostProps) {
     notFound();
   }
 
+  // TOC 추출을 위한 컴파일 - 실제 렌더링과 동일한 플러그인 설정 사용
+  // remark-gfm을 추가하여 동일한 ID 생성 보장
   const { data } = await compile(markdown, {
+    remarkPlugins: [remarkGfm], // 실제 렌더링과 동일하게 remark-gfm 추가
     rehypePlugins: [
       withSlugs,
+      rehypeRemoveUserContentPrefix, // user-content- 접두사 제거
       withToc,
       withTocExport,
       /** Optionally, provide a custom name for the export. */
@@ -221,6 +227,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
 
               {/* 블로그 본문 */}
               <div className="prose prose-slate dark:prose-invert prose-headings:scroll-mt-[var(--header-height)] prose-lg prose-p:leading-relaxed max-w-none">
+                <RemoveUserContentPrefix />
                 <MDXRemote
                   source={markdown}
                   options={{
@@ -233,7 +240,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
                         rehypeSlug, // 헤딩에 ID 추가
                         rehypePrettycode, // 코드 하이라이팅
                         [
-                          rehypeSanitize, // XSS 방지를 위한 보안 레이어 (마지막에 실행)
+                          rehypeSanitize, // XSS 방지를 위한 보안 레이어
                           {
                             ...defaultSchema,
                             tagNames: [
@@ -249,6 +256,13 @@ export default async function BlogPost({ params }: BlogPostProps) {
                               del: ['className', 'id'],
                               div: ['className', 'style'],
                               a: [...(defaultSchema.attributes?.a || []), 'target', 'rel'],
+                              // 헤딩 태그에 id 속성 허용 (목차 기능을 위해 필수)
+                              h1: ['id'],
+                              h2: ['id'],
+                              h3: ['id'],
+                              h4: ['id'],
+                              h5: ['id'],
+                              h6: ['id'],
                               iframe: [
                                 'src',
                                 'width',
@@ -266,6 +280,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
                             },
                           },
                         ],
+                        rehypeRemoveUserContentPrefix, // user-content- 접두사 제거 (모든 플러그인 실행 후 마지막에 실행)
                       ],
                     },
                   }}
