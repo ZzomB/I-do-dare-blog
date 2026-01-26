@@ -51,9 +51,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'nFgS7btD68gcf1zu0nK_B6CNbTZrtDwAXnu0QoqFvAw',
+    google: 'VjkURQGndYXk7tywQuw5IWQgV4gLoi5skeYishNvr5U',
     other: {
-      'naver-site-verification': 'd83b83d60f54b81c98b38e8bda884ec6514f9b03',
+      'naver-site-verification': 'a4d257d26c81e1701ea41e79dd92cbda0b46ab96',
     },
   },
 };
