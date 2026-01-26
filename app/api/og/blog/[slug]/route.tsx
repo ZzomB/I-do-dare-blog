@@ -1,21 +1,15 @@
 import { ImageResponse } from 'next/og';
 import { getPostBySlug } from '@/lib/notion';
 
-// 이미지 크기 정의
-export const size = {
-  width: 1200,
-  height: 630,
-};
+const size = { width: 1200, height: 630 };
 
-// 이미지 콘텐츠 타입 정의
-export const contentType = 'image/png';
+export async function GET(
+  _request: Request,
+  context: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await context.params;
+  const { post } = await getPostBySlug(slug);
 
-// OG 이미지 생성 함수
-export default async function OgImage({ params }: { params: { slug: string } }) {
-  // 게시물 데이터 가져오기
-  const { post } = await getPostBySlug(params.slug);
-
-  // 게시물이 없는 경우 기본 이미지 반환
   if (!post) {
     return new ImageResponse(
       (
@@ -38,7 +32,6 @@ export default async function OgImage({ params }: { params: { slug: string } }) 
     );
   }
 
-  // 게시물 태그 문자열로 변환
   const tagString = post.tags?.join(', ') || '';
 
   return new ImageResponse(

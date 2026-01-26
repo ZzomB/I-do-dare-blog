@@ -41,6 +41,27 @@ export async function generateMetadata({
   const postUrl = `${baseUrl}/blog/${slug}`;
   const description = post.description || `${post.title} - Joos Blog`;
 
+  const ogImageUrl = post.coverImage
+    ? post.coverImage
+    : `${baseUrl}/api/og/blog/${slug}`;
+  const ogImages = post.coverImage
+    ? [
+        {
+          url: post.coverImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ]
+    : [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ];
+
   return {
     title: post.title,
     description,
@@ -60,22 +81,13 @@ export async function generateMetadata({
       modifiedTime: post.modifiedDate || post.date,
       authors: [post.author || 'Joo'],
       tags: post.tags,
-      images: post.coverImage
-        ? [
-            {
-              url: post.coverImage,
-              width: 1200,
-              height: 630,
-              alt: post.title,
-            },
-          ]
-        : [],
+      images: ogImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description,
-      images: post.coverImage ? [post.coverImage] : [],
+      images: [ogImageUrl],
     },
     robots: {
       index: true,
@@ -210,7 +222,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
 
               {/* 썸네일 이미지 */}
               {post.coverImage && (
-                <div className="relative mt-8 mb-8 aspect-[16/9] w-full overflow-hidden rounded-lg shadow-lg">
+                <div className="relative mt-8 mb-8 aspect-video w-full overflow-hidden rounded-lg shadow-lg">
                   <Image
                     src={post.coverImage}
                     alt={post.title}
@@ -224,7 +236,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
 
               <Separator className="my-8" />
               {/* 모바일 전용 목차 */}
-              <div className="sticky top-[var(--sticky-top)] mb-6 md:hidden">
+              <div className="sticky top-(--sticky-top) mb-6 md:hidden">
                 <details className="bg-muted/60 rounded-lg p-4 backdrop-blur-sm">
                   <summary className="cursor-pointer text-lg font-semibold">목차</summary>
                   <div className="mt-3">
@@ -234,7 +246,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
               </div>
 
               {/* 블로그 본문 */}
-              <div className="prose prose-slate dark:prose-invert prose-headings:scroll-mt-[var(--header-height)] prose-lg prose-p:leading-relaxed max-w-none">
+              <div className="prose prose-slate dark:prose-invert prose-headings:scroll-mt-(--header-height) prose-lg prose-p:leading-relaxed max-w-none">
                 <RemoveUserContentPrefix />
                 <MDXRemote
                   source={markdown}
@@ -301,7 +313,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
               <GiscusComments />
             </section>
             <aside className="relative hidden md:block">
-              <div className="sticky top-[var(--sticky-top)]">
+              <div className="sticky top-(--sticky-top)">
                 <div className="bg-muted/50 rounded-lg p-6 backdrop-blur-sm">
                   <h3 className="text-xl font-semibold mb-4">목차</h3>
                   <div
