@@ -302,9 +302,16 @@ export default async function BlogPost({ params }: BlogPostProps) {
             </section>
             <aside className="relative hidden md:block">
               <div className="sticky top-[var(--sticky-top)]">
-                <div className="bg-muted/50 space-y-4 rounded-lg p-6 backdrop-blur-sm">
-                  <h3 className="text-xl font-semibold">목차</h3>
-                  {tocData?.toc && <TableOfContents toc={tocData.toc as TocEntry[]} />}
+                <div className="bg-muted/50 rounded-lg p-6 backdrop-blur-sm">
+                  <h3 className="text-xl font-semibold mb-4">목차</h3>
+                  <div
+                    className="overflow-y-auto overscroll-contain pr-2"
+                    style={{
+                      maxHeight: 'calc(100vh - var(--sticky-top) - 10rem)',
+                    }}
+                  >
+                    {tocData?.toc && <TableOfContents toc={tocData.toc as TocEntry[]} />}
+                  </div>
                 </div>
               </div>
             </aside>
