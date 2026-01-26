@@ -6,9 +6,9 @@ import { GetPublishedPostsResponse } from '@/lib/notion';
 import { use } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 
 interface PostListProps {
   postsPromise: Promise<GetPublishedPostsResponse>;
@@ -17,9 +17,12 @@ interface PostListProps {
 export default function PostList({ postsPromise }: PostListProps) {
   const initialData = use(postsPromise);
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const tag = searchParams.get('tag');
   const sort = searchParams.get('sort');
   const pageSize = 2;
+  const [loadingSlug, setLoadingSlug] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
   // API 호출 함수
   const fetchPosts = async ({ pageParam }: { pageParam: string | undefined }) => {
     const params = new URLSearchParams();
@@ -69,13 +72,40 @@ export default function PostList({ postsPromise }: PostListProps) {
   // 모든 페이지의 포스트들을 평탄화 (초기 데이터 + 추가 데이터)
   const allPosts = data?.pages.flatMap((page) => page.posts) ?? [];
 
+  const handleLinkClick = (slug: string) => {
+    setLoadingSlug(slug);
+    startTransition(() => {
+      // 네비게이션이 시작됨
+    });
+  };
+
+  // 경로가 변경되면 로딩 상태 해제
+  useEffect(() => {
+    if (pathname?.startsWith('/blog/')) {
+      setLoadingSlug(null);
+    }
+  }, [pathname]);
+
   return (
     <div className="space-y-6">
       <div className="grid gap-4">
         {allPosts.length > 0 ? (
           allPosts.map((post, index) => (
-            <Link href={`/blog/${post.slug}`} key={post.id}>
+            <Link
+              href={`/blog/${post.slug}`}
+              key={post.id}
+              onClick={() => handleLinkClick(post.slug)}
+              className="relative block"
+            >
               <PostCard key={post.id} post={post} isFirst={index === 0} />
+              {loadingSlug === post.slug && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+                  <div className="flex flex-col items-center gap-2">
+                    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    <span className="text-sm font-medium">로딩 중...</span>
+                  </div>
+                </div>
+              )}
             </Link>
           ))
         ) : (
