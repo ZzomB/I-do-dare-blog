@@ -95,11 +95,13 @@ export default function PostList({ postsPromise }: PostListProps) {
               href={`/blog/${post.slug}`}
               key={post.id}
               onClick={() => handleLinkClick(post.slug)}
-              className="relative block"
+              className={`relative block ${
+                loadingSlug === post.slug ? 'pointer-events-none' : ''
+              }`}
             >
               <PostCard key={post.id} post={post} isFirst={index === 0} />
               {loadingSlug === post.slug && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+                <div className="absolute -inset-2 z-50 flex items-center justify-center rounded-lg bg-background/90 backdrop-blur-md transition-opacity duration-300">
                   <div className="flex flex-col items-center gap-2">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     <span className="text-sm font-medium">로딩 중...</span>

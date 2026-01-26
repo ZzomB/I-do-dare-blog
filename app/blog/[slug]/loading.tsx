@@ -16,7 +16,7 @@ export default function Loading() {
           </div>
 
           {/* 메인 이미지 */}
-          <Skeleton className="aspect-[16/9] w-full rounded-lg" />
+          <Skeleton className="aspect-video w-full rounded-lg" />
 
           {/* 본문 컨텐츠 */}
           <div className="space-y-4">
