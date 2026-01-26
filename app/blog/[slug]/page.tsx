@@ -13,7 +13,6 @@ import rehypeMdxToElement from '@/lib/rehype-mdx-to-element';
 import rehypeGoogleDriveEmbed from '@/lib/rehype-google-drive-embed';
 import rehypeSoftBreak from '@/lib/rehype-soft-break';
 import rehypeRemoveUserContentPrefix from '@/lib/rehype-remove-user-content-prefix';
-import { compile } from '@mdx-js/mdx';
 import withSlugs from 'rehype-slug';
 import withToc from '@stefanprobst/rehype-extract-toc';
 import withTocExport from '@stefanprobst/rehype-extract-toc/mdx';
@@ -120,17 +119,26 @@ export default async function BlogPost({ params }: BlogPostProps) {
 
   // TOC 추출을 위한 컴파일 - 실제 렌더링과 동일한 플러그인 설정 사용
   // remark-gfm을 추가하여 동일한 ID 생성 보장
-  const { data } = await compile(markdown, {
-    remarkPlugins: [remarkGfm], // 실제 렌더링과 동일하게 remark-gfm 추가
-    rehypePlugins: [
-      withSlugs,
-      rehypeRemoveUserContentPrefix, // user-content- 접두사 제거
-      withToc,
-      withTocExport,
-      /** Optionally, provide a custom name for the export. */
-      // [withTocExport, { name: 'toc' }],
-    ],
-  });
+  // Turbopack 호환성을 위해 동적 import 사용
+  let tocData: any = null;
+  try {
+    const { compile } = await import('@mdx-js/mdx');
+    const { data } = await compile(markdown, {
+      remarkPlugins: [remarkGfm], // 실제 렌더링과 동일하게 remark-gfm 추가
+      rehypePlugins: [
+        withSlugs,
+        rehypeRemoveUserContentPrefix, // user-content- 접두사 제거
+        withToc,
+        withTocExport,
+        /** Optionally, provide a custom name for the export. */
+        // [withTocExport, { name: 'toc' }],
+      ],
+    });
+    tocData = data;
+  } catch (error) {
+    // TOC 추출 실패 시에도 페이지는 정상적으로 렌더링되도록 함
+    console.warn('TOC 추출 실패:', error);
+  }
 
   // 구조화된 데이터 (Schema.org JSON-LD)
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
@@ -220,7 +228,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
                 <details className="bg-muted/60 rounded-lg p-4 backdrop-blur-sm">
                   <summary className="cursor-pointer text-lg font-semibold">목차</summary>
                   <div className="mt-3">
-                    {data?.toc && <TableOfContents toc={data.toc as TocEntry[]} />}
+                    {tocData?.toc && <TableOfContents toc={tocData.toc as TocEntry[]} />}
                   </div>
                 </details>
               </div>
@@ -296,7 +304,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
               <div className="sticky top-[var(--sticky-top)]">
                 <div className="bg-muted/50 space-y-4 rounded-lg p-6 backdrop-blur-sm">
                   <h3 className="text-xl font-semibold">목차</h3>
-                  {data?.toc && <TableOfContents toc={data.toc as TocEntry[]} />}
+                  {tocData?.toc && <TableOfContents toc={tocData.toc as TocEntry[]} />}
                 </div>
               </div>
             </aside>
