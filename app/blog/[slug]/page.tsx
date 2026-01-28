@@ -37,9 +37,9 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.idodareblog.com';
   const postUrl = `${baseUrl}/blog/${slug}`;
-  const description = post.description || `${post.title} - Joos Blog`;
+  const description = post.description || `${post.title} - I do dare`;
 
   const ogImageUrl = post.coverImage
     ? post.coverImage
@@ -75,8 +75,9 @@ export async function generateMetadata({
       title: post.title,
       description,
       url: postUrl,
-      siteName: 'Joos Blog',
+      siteName: 'I do dare',
       type: 'article',
+      locale: 'ko_KR',
       publishedTime: post.date,
       modifiedTime: post.modifiedDate || post.date,
       authors: [post.author || 'Joo'],
@@ -153,13 +154,13 @@ export default async function BlogPost({ params }: BlogPostProps) {
   }
 
   // 구조화된 데이터 (Schema.org JSON-LD)
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.idodareblog.com';
   const postUrl = `${baseUrl}/blog/${slug}`;
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
-    description: post.description || `${post.title} - Joos Blog`,
+    description: post.description || `${post.title} - I do dare`,
     image: post.coverImage ? [post.coverImage] : [],
     datePublished: post.date,
     dateModified: post.modifiedDate || post.date,
@@ -169,10 +170,10 @@ export default async function BlogPost({ params }: BlogPostProps) {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Joos Blog',
+      name: 'I do dare',
       logo: {
         '@type': 'ImageObject',
-        url: `${baseUrl}/og-image.png`,
+        url: `${baseUrl}/opengraph-image`,
       },
     },
     mainEntityOfPage: {
@@ -181,7 +182,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
     },
     keywords: post.tags?.join(', '),
     articleSection: 'Blog',
-    inLanguage: 'ko',
+    inLanguage: 'ko-KR',
   };
 
   return (
