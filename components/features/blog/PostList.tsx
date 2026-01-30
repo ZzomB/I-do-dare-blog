@@ -12,7 +12,7 @@ export default function PostList({ posts }: PostListProps) {
       {posts.length > 0 ? (
         posts.map((post, index) => (
           <Link href={`/blog/${post.slug}`} key={post.id}>
-            <PostCard key={post.id} post={post} isFirst={index === 0} />
+            <PostCard key={post.id} post={post} />
           </Link>
         ))
       ) : (

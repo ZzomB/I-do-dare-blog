@@ -99,7 +99,7 @@ export default function PostList({ postsPromise }: PostListProps) {
                 loadingSlug === post.slug ? 'pointer-events-none' : ''
               }`}
             >
-              <PostCard key={post.id} post={post} isFirst={index === 0} />
+              <PostCard key={post.id} post={post} />
               {loadingSlug === post.slug && (
                 <div className="absolute -inset-2 z-50 flex items-center justify-center rounded-lg bg-background/90 backdrop-blur-md transition-opacity duration-300">
                   <div className="flex flex-col items-center gap-2">

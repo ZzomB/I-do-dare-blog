@@ -9,21 +9,20 @@ import { formatDate } from '@/lib/date';
 
 interface PostCardProps {
   post: Post;
-  isFirst?: boolean;
 }
 
-export function PostCard({ post, isFirst = false }: PostCardProps) {
+export function PostCard({ post }: PostCardProps) {
   return (
     <Card className="group bg-card/50 hover:border-primary/20 overflow-hidden border py-0 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
       {post.coverImage && (
-        <div className="relative -mb-4 aspect-[2/1] overflow-hidden">
-          <div className="from-background/20 absolute inset-0 z-10 bg-gradient-to-t to-transparent" />
+        <div className="relative -mb-4 aspect-2/1 overflow-hidden">
+          <div className="from-background/20 absolute inset-0 z-10 bg-linear-to-t to-transparent" />
           <Image
             src={post.coverImage}
             alt={post.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={isFirst}
+            unoptimized
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>
