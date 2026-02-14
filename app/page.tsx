@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   
   return {
     title: 'I do dare',
-    description: '나를 이루는 작은 도전들 - 여행, 의료, 음악 등 다양한 분야의 도전과 경험을 공유하는 블로그',
+    description: '나를 이루는 작은 도전들 - 여행, 의료, 음악 등 다양한 분야의 도전과 경험들을 공유하는 블로그',
     keywords: ['challenges', 'dare', 'travel', 'medical', 'disease', 'sing', 'vocal', '블로그', '도전', '여행', '의료'],
     authors: [{ name: 'Joo', url: 'https://github.com/ZzomB' }],
     creator: 'Joo',
