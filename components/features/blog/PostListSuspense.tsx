@@ -20,7 +20,7 @@ export default function PostList({ postsPromise }: PostListProps) {
   const pathname = usePathname();
   const tag = searchParams.get('tag');
   const sort = searchParams.get('sort');
-  const pageSize = 2;
+  const pageSize = 9;
   const [loadingSlug, setLoadingSlug] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   // API 호출 함수
@@ -88,7 +88,7 @@ export default function PostList({ postsPromise }: PostListProps) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {allPosts.length > 0 ? (
           allPosts.map((post, index) => (
             <Link

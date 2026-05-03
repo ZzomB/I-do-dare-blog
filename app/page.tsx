@@ -1,5 +1,4 @@
 import PostListSuspense from '@/components/features/blog/PostListSuspense';
-import ContactCard from '@/app/_components/ContactCard';
 import { getTagList } from '@/lib/notion';
 import HeaderSection from '@/app/_components/HeaderSection';
 import { Suspense } from 'react';
@@ -102,7 +101,7 @@ export default async function Home({ searchParams }: HomeProps) {
       />
       {/* min-h-screen으로 전체 높이 보장, grid로 3개 영역 분할 */}
       <div className="container py-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[200px_1fr_220px]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[200px_1fr]">
         {/* 좌측사이드바 */}
         <aside className="order-2 md:order-0">
           <Suspense fallback={<TagSectionSkeleton />}>
@@ -117,10 +116,6 @@ export default async function Home({ searchParams }: HomeProps) {
             <PostListSuspense postsPromise={postsPromise} />
           </Suspense>
         </div>
-        {/* 우측 사이드바 */}
-        <aside className="order-1 md:order-0">
-          <ContactCard />
-        </aside>
       </div>
     </div>
     </>
