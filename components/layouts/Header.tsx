@@ -12,15 +12,15 @@ export default function Header() {
               <span className="font-bold">WeDoDare</span>
             </Link>
           </div>
-          <nav className="flex items-center justify-center gap-4">
-            <Link href="/" className="hover:text-primary font-medium">
-              홈
-            </Link>
-          </nav>
           <div className="flex items-center justify-end gap-4">
-            <Link href="/about" className="hover:text-primary font-medium">
-              소개
-            </Link>
+            <nav className="flex items-center gap-4 mr-2">
+              <Link href="/" className="hover:text-primary font-medium">
+                홈
+              </Link>
+              <Link href="/about" className="hover:text-primary font-medium">
+                소개
+              </Link>
+            </nav>
             <div className="flex items-center gap-3 mr-2">
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">
                 <Instagram className="h-5 w-5" />
